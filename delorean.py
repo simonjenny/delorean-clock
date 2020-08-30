@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-os.environ["SDL_FBDEV"] = "/dev/fb1"
+os.environ["SDL_FBDEV"] = "/dev/fb0"
 
 import pygame, random
+import pygame.ftfont
 from datetime import datetime
 
 pygame.init()
@@ -25,18 +26,18 @@ screen = pygame.display.set_mode((X, Y))
 
 def Print(str, location, color, alpha):
 
-    font = pygame.font.Font('lcd.ttf', 50)
+    m = "8" if str.isdigit() else "O"
+    font = pygame.ftfont.Font('lcd.ttf', 50)
+    shadow = font.render(m * len(str), True, (30,30,30))
+    shadow.set_alpha(50)
+    shadow_rect = shadow.get_rect(center=location)
+    screen.blit(shadow, shadow_rect)
+
+    font = pygame.ftfont.Font('lcd.ttf', 50)
     text = font.render(str, True, color)
     text.set_alpha(alpha)
     text_rect = text.get_rect(center=location)
     screen.blit(text, text_rect)
-
-    m = "8" if str.isdigit() else "O"
-    font = pygame.font.Font('lcd.ttf', 50)
-    shadow = font.render(m * len(str), True, (255,255,255))
-    shadow.set_alpha(50)
-    shadow_rect = shadow.get_rect(center=location)
-    screen.blit(shadow, shadow_rect)
 
 def Circle(location, color, radius):
     pygame.draw.circle(screen, color, location, radius)
@@ -84,13 +85,13 @@ while True:
     #Last
     YELLOW = (255,223,126)
     ALPHA3 = random.randint(235, 255)
-    Print(now.strftime("%b").upper(), (80, 403), YELLOW, ALPHA3) #MONTH
-    Print(now.strftime("%d"), (227, 403), YELLOW, ALPHA3) #DAY
-    Print(now.strftime("1985"), (380, 403), YELLOW, ALPHA3) #YEAR
-    Print(now.strftime("%H"), (608, 403), YELLOW, ALPHA3) #HOUR
-    Print(now.strftime("%M"), (736, 403), YELLOW, ALPHA3) #MINUTR
+    Print(now.strftime("%b").upper(), (80, 405), YELLOW, ALPHA3) #MONTH
+    Print(now.strftime("%d"), (227, 405), YELLOW, ALPHA3) #DAY
+    Print(now.strftime("1985"), (380, 405), YELLOW, ALPHA3) #YEAR
+    Print(now.strftime("%H"), (608, 405), YELLOW, ALPHA3) #HOUR
+    Print(now.strftime("%M"), (736, 405), YELLOW, ALPHA3) #MINUTR
 
-    RADIUS = alt.next()
+    RADIUS = next(alt)
 
     Circle((668, 65), ORANGE, RADIUS)
     Circle((668, 87), ORANGE, RADIUS)
@@ -106,7 +107,7 @@ while True:
         Circle((503, 204), GREEN, 7)
         Circle((503, 370), YELLOW, 7)
     else:
-        Circle((503, 88), ORANGE, 7)
+        Circle((503, 90), ORANGE, 7)
         Circle((503, 248), GREEN, 7)
         Circle((503, 414), YELLOW, 7)
 
